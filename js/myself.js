@@ -1,24 +1,65 @@
-/**
- * Global variables
- */
+// Get li list of cellList
+function getCellElementList() {
+  return document.querySelectorAll("#cellList > li");
+}
 
-import {
-  getCurrentTurnElement,
-  getGameStatusElement,
-  getCellElementList,
-  getReplayGameButton,
-} from "./selectors.js";
+// Get current turn element
+function getCurrentTurnElement() {
+  return document.getElementById("currentTurn");
+}
 
-import { TURN, CELL_VALUE, GAME_STATUS } from "./constants.js";
+// Get li element at index
+function getCellElementAtIdx(index) {
+  return document.querySelector(`#cellList > li:nth-child(${index + 1})`);
+}
 
+// Get game status element
+function getGameStatusElement() {
+  return document.getElementById("gameStatus");
+}
+
+// Get replay game button
+function getReplayGameButton() {
+  return document.getElementById("replayGame");
+}
+
+// TODO LIST
+// Update game status span
+// Update the current turn
+// Update the li element when click
+// Update the replay button when win
+
+// Declaration for turn
+const TURN = {
+  CROSS: "cross",
+  CIRCLE: "circle",
+};
+
+// Declaration for cell value
+const CELL_VALUE = {
+  CROSS: "X",
+  CIRCLE: "O",
+  WIN: "win",
+};
+
+// Declaration for game status
+const GAME_STATUS = {
+  PLAYING: "PLAYING",
+  ENDED: "END",
+  X_WIN: "X WIN",
+  O_WIN: "O WIN",
+};
+
+let currentTurn = "cross";
 let isGameEnded = false;
 let cellValues = new Array(9).fill("");
 let countPlay = 0;
 
-export function checkCountPlay(countPlay) {
+function checkCountPlay(countPlay) {
   return countPlay % 2 === 0;
 }
-export function checkGameStatus(cellValues) {
+
+function checkGameStatus(cellValues) {
   return (
     (cellValues[0] &&
       cellValues[0] === cellValues[1] &&
@@ -47,7 +88,7 @@ export function checkGameStatus(cellValues) {
   );
 }
 
-export function checkWhichWin(cellValues) {
+function checkWhichWin(cellValues) {
   if (
     (cellValues[0] === "O" &&
       cellValues[0] === cellValues[1] &&
@@ -80,7 +121,7 @@ export function checkWhichWin(cellValues) {
   }
 }
 
-export function lightingLiElement(liList) {
+function lightingLiElement(liList) {
   if (
     cellValues[0] &&
     cellValues[0] === cellValues[1] &&
@@ -155,18 +196,13 @@ export function lightingLiElement(liList) {
   }
 }
 
-export function disableLiElement(liList) {
+function disableLiElement(liList) {
   liList.forEach((liElement) => {
     liElement.style.pointerEvents = "none";
   });
 }
 
-export function checkStatusEachLiElement(
-  status,
-  liList,
-  cellValues,
-  replayButton
-) {
+function checkStatusEachLiElement(status, liList, cellValues, replayButton) {
   if (countPlay === liList.length && !checkGameStatus(cellValues)) {
     isGameEnded = true;
     status.innerText = GAME_STATUS.ENDED;
@@ -181,7 +217,7 @@ export function checkStatusEachLiElement(
   }
 }
 
-export function handleClickLi(liList, status, currentTurn, replayButton) {
+function handleClickLi(liList, status, currentTurn, replayButton) {
   liList.forEach((liElement, index) => {
     liElement.addEventListener("click", function (e) {
       countPlay++;
@@ -203,7 +239,7 @@ export function handleClickLi(liList, status, currentTurn, replayButton) {
   });
 }
 
-export function handleClickReplay(replayButton, status, currentTurn) {
+function handleClickReplay(replayButton, status, currentTurn) {
   replayButton.addEventListener("click", function () {
     replayButton.classList.remove("show");
     status.innerText = "LOADING";
@@ -222,21 +258,7 @@ export function handleClickReplay(replayButton, status, currentTurn) {
     });
   });
 }
-/**
- * TODOs
- *
- * 1. Bind click event for all cells
- * 2. On cell click, do the following:
- *    - Toggle current turn
- *    - Mark current turn to the selected cell
- *    - Check game state: win, ended or playing
- *    - If game is win, highlight win cells
- *    - Not allow to re-click the cell having value.
- *
- * 3. If game is win or ended --> show replay button.
- * 4. On replay button click --> reset game to play again.
- *
- */
+
 (() => {
   const liList = Array.from(getCellElementList());
   const replayButton = getReplayGameButton();
